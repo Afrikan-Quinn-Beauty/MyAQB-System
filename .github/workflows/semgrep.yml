@@ -1,0 +1,28 @@
+
+name: AQB Full Security Scan
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 2 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep:
+    name: Semgrep Security Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    container:
+      image: semgrep/semgrep
+
+    steps:
+      - name: Download AQB repository
+        uses: actions/checkout@v6
+
+      - name: Scan entire repository
+        run: semgrep scan --config auto .
